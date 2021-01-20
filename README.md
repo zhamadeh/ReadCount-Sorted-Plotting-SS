@@ -5,4 +5,5 @@ This script does the folllowing:
 2) orders libraries by either background (low->high), coverage (high->low) or readsPerMb (high->low)
 3) prints out a user-specified number of the ordered libraries (eg. 10)
 
-[]("readCounts_perc.coverage.pdf")
+![](readCounts_perc.coverage.pdf)
+
