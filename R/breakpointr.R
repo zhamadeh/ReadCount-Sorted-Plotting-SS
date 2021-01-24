@@ -11,11 +11,13 @@ source("R/utils.R")
 source("R/summarizeBreaks.R")
 source("R/plotting.R")
 args = commandArgs(trailingOnly=TRUE)
+library(Rsamtools)
 
-#breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
-#args=c("TestBAMFiles/","BPR_output")
+#breakpointR::breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
+#args=c("TestBAMFiles/" ,"BPR_output", "feature" ,"perc.coverage", 10, FALSE)
 
-breakpointr <- function(inputfolder, outputfolder,printer="feature",feature="perc.coverage",numLibsToShow=10,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
+
+breakpointr <- function(inputfolder, outputfolder,printer="feature",feature="perc.coverage",numLibsToShow=10,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
 
 runBreakpointrANDexport <- function(file, datapath, browserpath, config) {
     savename <- file.path(datapath, paste0(basename(file),'.RData'))
@@ -252,5 +254,5 @@ if (printer=="feature"){
 }
 
 
-breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
+breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
 
