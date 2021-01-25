@@ -12,6 +12,7 @@ source("R/summarizeBreaks.R")
 source("R/plotting.R")
 args = commandArgs(trailingOnly=TRUE)
 library(Rsamtools)
+library(foreach)
 
 #breakpointR::breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
 #args=c("TestBAMFiles/" ,"BPR_output", "feature" ,"perc.coverage", 10, FALSE)
