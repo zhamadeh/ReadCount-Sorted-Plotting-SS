@@ -255,7 +255,7 @@ if (printer=="feature"){
     }
 }
 
-breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,numCPU = 1,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
+breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,numCPU = 2,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
 
 #inputfolder=args[1]
 #outputfolder = args[2]
