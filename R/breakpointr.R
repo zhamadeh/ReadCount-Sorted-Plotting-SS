@@ -159,7 +159,7 @@ if (createCompositeFile) {
     doParallel::registerDoParallel(cl)
 
     message("Finding breakpoints ...", appendLF=FALSE); ptm <- proc.time()
-    temp <- foreach (file = files) %dopar% {
+    temp <- foreach(file = files) %dopar% {
         runBreakpointrANDexport(file = file, datapath = datapath, browserpath = browserpath, config = config)
     }
 

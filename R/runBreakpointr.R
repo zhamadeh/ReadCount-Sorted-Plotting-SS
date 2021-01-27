@@ -5,8 +5,6 @@ library(GenomicRanges)
 library(S4Vectors)
 
 
-
-#'
 runBreakpointr <- function(bamfile, ID=basename(bamfile), pairedEndReads=TRUE, chromosomes=NULL, windowsize=1e6, binMethod="size", multi.sizes=NULL, trim=10, peakTh=0.33, zlim=3.291, background=0.05, min.mapq=10, pair2frgm=FALSE, filtAlt=FALSE, genoT='fisher', minReads=20, maskRegions=NULL, conf=0.99) {
 
     ## check the class of the bamfile, make GRanges object of file
