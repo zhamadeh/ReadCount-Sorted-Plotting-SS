@@ -1,3 +1,4 @@
+library(Rsamtools)
 
 readBamFileAsGRanges <- function(file, bamindex=file, chromosomes=NULL, pairedEndReads=FALSE, min.mapq=10, remove.duplicate.reads=TRUE, pair2frgm=FALSE, filtAlt=FALSE) {
 
@@ -52,9 +53,9 @@ readBamFileAsGRanges <- function(file, bamindex=file, chromosomes=NULL, pairedEn
             }
         } else {
             if (filtAlt) {
-                data.raw <- GenomicAlignments::readGAlignments(file, index=bamindex, param=Rsamtools::ScanBamParam(tag="XA", which=range(gr), what='mapq', flag=scanBamFlag(isDuplicate=FALSE)))
+                data.raw <- GenomicAlignments::readGAlignments(file, index=bamindex, param=Rsamtools::ScanBamParam(tag="XA", which=range(gr), what='mapq', flag=Rsamtools::scanBamFlag(isDuplicate=FALSE)))
             } else {
-                data.raw <- GenomicAlignments::readGAlignments(file, index=bamindex, param=Rsamtools::ScanBamParam(which=range(gr), what='mapq', flag=scanBamFlag(isDuplicate=FALSE)))
+                data.raw <- GenomicAlignments::readGAlignments(file, index=bamindex, param=Rsamtools::ScanBamParam(which=range(gr), what='mapq', flag=Rsamtools::scanBamFlag(isDuplicate=FALSE)))
             }
         }
     }
