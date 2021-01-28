@@ -14,6 +14,13 @@ args = commandArgs(trailingOnly=TRUE)
 library(Rsamtools)
 install.packages("foreach",repos = "http://cran.us.r-project.org")
 library(foreach)
+install.packages("doSNOW")
+install.packages("doParallel")
+install.packages("doMPI")
+library(doSNOW)
+library(doParallel)
+library(doMPI)
+
 
 #breakpointR::breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
 #args=c("TestBAMFiles/" ,"BPR_output", "feature" ,"perc.coverage", 10, FALSE)
@@ -157,9 +164,11 @@ if (createCompositeFile) {
     message("Using ",config[['numCPU']]," CPUs")
     cl <- parallel::makeCluster(config[['numCPU']])
     doParallel::registerDoParallel(cl)
-
     message("Finding breakpoints ...", appendLF=FALSE); ptm <- proc.time()
-    temp <- foreach(file = files) %dopar% {
+    temp <- foreach(file = files,.packages=c("IRanges","GenomeInfoDb"),.export = c("runBreakpointr","startTimedMessage","stopTimedMessage","readBamFileAsGRanges","seqnames","deltaWCalculator","writeConfig","class.breakpoint","c",
+                                                                                   "GRangesList","seqlengths","breakSeekr","GenotypeBreaks","seqlevels","genotype.fisher","RefineBreaks","mergeGR","do.call",
+                                                                                   "GRanges","confidenceInterval.binomial","breakpointr", "breakpointr2UCSC" ,"collapseBins","confidenceInterval" ,"deltaWCalculatorVariousWindows" ,"genotype.binom" ,
+                                                                                   "insertchr" ,"loadFromFiles", "plotBreakpoints" ,"plotBreakpointsPerChr" ,"plotHeatmap"  , "plottingReadCounts" ,"ranges2UCSC","readConfig"  ,"removeDoubleSCEs" ,"removeReadPileupSpikes" ,"runBreakpointrANDexport" ,   "summarizeBreaks","transCoord"  , "writeConfig" )) %dopar% {
         runBreakpointrANDexport(file = file, datapath = datapath, browserpath = browserpath, config = config)
     }
 
@@ -255,35 +264,6 @@ if (printer=="feature"){
     }
 }
 
-breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,numCPU = 2,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
-
-#inputfolder=args[1]
-#outputfolder = args[2]
-#printer=args[3]
-#feature=args[4]
-#numLibsToShow = args[5]
-#halfHalf=args[6]
-#pairedEndReads = F
-#numCPU = 5
-#windowsize=175
-#binMethod="reads"
-#peakTh=0.3875
-#min.mapq=7.75
-#trim=6.5
-#background=0.15
-#multi.sizes=NULL
-#genoT = "fisher"
-
-#reuse.existing.files=FALSE
-#multi.sizes=NULL
-#pair2frgm=FALSE
-#chromosomes=NULL
-#filtAlt=FALSE
-#genoT='fisher'
-#zlim=3.291
-#minReads=10
-#maskRegions=NULL
-#callHotSpots=FALSE
-#conf=0.99
+breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,numCPU = 13,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
 
 
