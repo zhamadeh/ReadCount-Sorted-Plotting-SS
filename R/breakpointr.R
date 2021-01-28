@@ -14,12 +14,12 @@ args = commandArgs(trailingOnly=TRUE)
 library(Rsamtools)
 install.packages("foreach",repos = "http://cran.us.r-project.org")
 library(foreach)
-install.packages("doSNOW")
-install.packages("doParallel")
-install.packages("doMPI")
+install.packages("doSNOW",repos = "http://cran.us.r-project.org")
+install.packages("doParallel",repos = "http://cran.us.r-project.org")
+
 library(doSNOW)
 library(doParallel)
-library(doMPI)
+
 
 
 #breakpointR::breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
