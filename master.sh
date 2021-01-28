@@ -11,4 +11,4 @@
 #sixth is FALSE if only top libraries are shown in feature file, if TRUE, shows half top half bottom files
 
 
-Rscript R/breakpointr.R "../NEW_PAPER_OLD_DATA/se_alignment_pipeline/mdup/" "BPR_output" "feature" "perc.coverage" 10 FALSE
+Rscript R/breakpointr.R "../NEW_PAPER_OLD_DATA/pe_alignment_pipeline/mdup/" "BPR_output" "feature" "perc.coverage" 10 FALSE
