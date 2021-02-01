@@ -303,6 +303,10 @@ sce_summary=args[9]
 metricsfileDir=args[10]
 pairedEndReads = T
 numCPU = args[8]
+breakspath="BPR_output/breakpoints"
+datapath="BPR_output/data"
+cleanDatapath="BPR_output/clean"
+filteredDatapath="BPR_output/good"
 
 if (sce_summary){
     summaryBreaks.df <- read.table(file.path(breakspath, 'breakPointSummary.txt'),header=T)
