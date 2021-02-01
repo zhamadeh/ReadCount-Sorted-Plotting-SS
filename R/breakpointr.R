@@ -10,23 +10,20 @@ source("R/exportUCSC.R")
 source("R/utils.R")
 source("R/summarizeBreaks.R")
 source("R/plotting.R")
+source("R/qualityFilterLibraries.R")
+source("R/statsSummaryPlots.R")
 args = commandArgs(trailingOnly=TRUE)
-library(Rsamtools)
-install.packages("foreach",repos = "http://cran.us.r-project.org")
-library(foreach)
-install.packages("doSNOW",repos = "http://cran.us.r-project.org")
-install.packages("doParallel",repos = "http://cran.us.r-project.org")
-
-library(doSNOW)
-library(doParallel)
-
+list.of.packages <- c("foreach", "deSNOW","doParallel")
+new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
+suppressPackageStartupMessages(suppressMessages(suppressWarnings(if(length(new.packages)) install.packages(new.packages,repos = "http://cran.us.r-project.org"))))
+suppressPackageStartupMessages(suppressMessages(suppressWarnings(require(Rsamtools))))
+suppressPackageStartupMessages(suppressMessages(suppressWarnings(require(foreach))))
+suppressPackageStartupMessages(suppressMessages(suppressWarnings(require(doSNOW))))
+suppressPackageStartupMessages(suppressMessages(suppressWarnings(require(doParallel))))
 
 
-#breakpointR::breakpointr(inputfolder="TestBAMFiles/",outputfolder = "BPR_output",pairedEndReads = T,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15)
-#args=c("TestBAMFiles/" ,"BPR_output", "feature" ,"perc.coverage", 10, FALSE)
 
-
-breakpointr <- function(inputfolder, outputfolder,printer="feature",feature="perc.coverage",numLibsToShow=10,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
+breakpointr <- function(inputfolder, outputfolder,plotFull=TRUE,metricsfileDir=NULL,plotFeature=TRUE,feature="perc.coverage",numLibsToShow=10,sce_summary=FALSE,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
 
 runBreakpointrANDexport <- function(file, datapath, browserpath, config) {
     savename <- file.path(datapath, paste0(basename(file),'.RData'))
@@ -93,6 +90,8 @@ windowsize <- config[['windowsize']]
 
 ## Set up the directory structure ##
 datapath <- file.path(outputfolder,'data')
+filteredDatapath <- file.path(outputfolder,'good')
+cleanDatapath <- file.path(outputfolder,"clean")
 browserpath <- file.path(outputfolder,'browserfiles')
 plotspath <- file.path(outputfolder,'plots')
 breakspath <- file.path(outputfolder,'breakpoints')
@@ -113,6 +112,8 @@ if (!file.exists(datapath)) { dir.create(datapath) }
 if (!file.exists(browserpath)) { dir.create(browserpath) }
 if (!file.exists(plotspath)) { dir.create(plotspath) }
 if (!file.exists(breakspath)) { dir.create(breakspath) }
+if (!file.exists(filteredDatapath)) { dir.create(filteredDatapath) }
+if (!file.exists(cleanDatapath)) { dir.create(cleanDatapath) }
 
 ## Write README file RR
 savename <- file.path(outputfolder, 'README.txt')
@@ -162,7 +163,7 @@ if (createCompositeFile) {
 } else if (numCPU > 1) {
     ## Parallelization ##
     message("Using ",config[['numCPU']]," CPUs")
-    cl <- parallel::makeCluster(config[['numCPU']])
+    cl <- parallel::makeForkCluster(config[['numCPU']])
     doParallel::registerDoParallel(cl)
     message("Finding breakpoints ...", appendLF=FALSE); ptm <- proc.time()
     temp <- foreach(file = files,.packages=c("IRanges","GenomeInfoDb"),.export = c("runBreakpointr","startTimedMessage","stopTimedMessage","readBamFileAsGRanges","seqnames","deltaWCalculator","writeConfig","class.breakpoint","c",
@@ -251,19 +252,65 @@ if (callHotSpots) {
     }
 }
 
-## Plotting
-datapath <- file.path(outputfolder,'data')
-files2plot <- list.files(datapath, pattern = ".RData", full.names = TRUE)
-plotspath <- file.path(outputfolder,'plots')
-plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
+if (sce_summary){
+    summaryBreaks.df <- read.table(file.path(breakspath, 'breakPointSummary.txt'),header=T)
+    qualityFilterLibraries(datapath,metricsfileDir,filteredDatapath)
+    frequencyFilterBreakpoints(summaryBreaks.df, blacklist="Input/Blacklist/centromeres2.txt",filteredDatapath,cleanDatapath,filterFrequency=0.15)
+    ## Plotting
+    if (plotFull){
+        cleanDatapath <- file.path(outputfolder,'clean')
+        files2plot <- list.files(cleanDatapath, pattern = ".RData", full.names = TRUE)
+        plotspath <- file.path(outputfolder,'plots')
+        plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
+    }
+    if (plotFeature){
+        files2plot <- file.path(outputfolder,'clean/')
+        plotspath <- file.path(outputfolder,'plots/')
+        plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
+    }
+    plottingSummary("Output/Plots/")
 
-if (printer=="feature"){
-    files2plot <- file.path(outputfolder,'data/')
-    plotspath <- file.path(outputfolder,'plots/')
-    plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
+} else {
+    ## Plotting
+    if (plotFull){
+        cleanDatapath <- file.path(outputfolder,'data')
+        files2plot <- list.files(cleanDatapath, pattern = ".RData", full.names = TRUE)
+        plotspath <- file.path(outputfolder,'plots')
+        plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
+    }
+    if (plotFeature){
+        files2plot <- file.path(outputfolder,'data/')
+        plotspath <- file.path(outputfolder,'plots/')
+        plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
     }
 }
 
-breakpointr(inputfolder=args[1],outputfolder = args[2], printer=args[3],feature=args[4],numLibsToShow = args[5],halfHalf=args[6], pairedEndReads = T,numCPU = 13,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
+
+
+}
+
+breakpointr(inputfolder=args[1],outputfolder = args[2], plotFull=args[3],plotFeature=args[4],feature=args[5],numLibsToShow = args[6],halfHalf=args[7], sce_summary=args[9],metricsfileDir=args[10],pairedEndReads = T,numCPU = args[8],windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
+#args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, FALSE ,"perc.coverage", 10 ,FALSE, 4, TRUE)
+
+#inputfolder=args[1]
+#outputfolder = args[2]
+#plotFull=args[3]
+#plotFeature=args[4]
+#feature=args[5]
+#numLibsToShow = args[6]
+#halfHalf=args[7]
+#sce_summary=args[9]
+#metricsfileDir=args[10]
+#pairedEndReads = T
+#numCPU = args[8]
+#windowsize=175
+#binMethod="reads"
+#peakTh=0.3875
+#min.mapq=7.75
+#trim=6.5
+#background=0.15
+#multi.sizes=NULL
+#genoT = "fisher"#
+
 
 

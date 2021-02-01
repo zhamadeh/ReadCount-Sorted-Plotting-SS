@@ -1,4 +1,5 @@
 
+
 plotBreakpoints <- function(files2plot, file=NULL) {
 
     if (is(files2plot, class.breakpoint)) {

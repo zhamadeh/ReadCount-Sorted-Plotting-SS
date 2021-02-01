@@ -46,7 +46,7 @@ runBreakpointr <- function(bamfile, ID=basename(bamfile), pairedEndReads=TRUE, c
     counts.all.chroms <- GenomicRanges::GRangesList()
     GenomeInfoDb::seqlevels(counts.all.chroms) <- GenomeInfoDb::seqlevels(fragments)
     GenomeInfoDb::seqlengths(counts.all.chroms) <- GenomeInfoDb::seqlengths(fragments)
-    chr=unique(seqnames(fragments))[2]
+
     for (chr in unique(seqnames(fragments))) {
         message("  Working on chromosome ",chr)
         fragments.chr <- fragments[seqnames(fragments)==chr]

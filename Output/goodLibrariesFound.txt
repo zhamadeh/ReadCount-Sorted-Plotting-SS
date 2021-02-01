@@ -1,0 +1,5 @@
+zeid_WT_UV300s_hoechst3_cluster13_well18_S410_.trimmed.mdup.bam.RData
+zeid_WT_UV300s_hoechst3_cluster13_well24_S416_.trimmed.mdup.bam.RData
+zeid_WT_UV300s_hoechst3_cluster13_well27_S419_.trimmed.mdup.bam.RData
+zeid_WT_UV300s_hoechst3_cluster13_well34_S426_.trimmed.mdup.bam.RData
+zeid_WT_UV300s_hoechst3_cluster13_well37_S429_.trimmed.mdup.bam.RData

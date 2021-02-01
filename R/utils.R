@@ -1,6 +1,6 @@
 #' Collapse consecutive bins with the same ID value
 #'
-#' Collapse consecutive bins with the same value defined in 'id.field'. 
+#' Collapse consecutive bins with the same value defined in 'id.field'.
 #'
 #' @param gr A \code{\link{GRanges-class}} object.
 #' @param id.field A number of metadata column to use for region merging.
@@ -10,7 +10,7 @@ collapseBins <- function(gr, id.field=3) {
     ind.last <- cumsum(S4Vectors::runLength(S4Vectors::Rle(mcols(gr)[,id.field])))
     ##get indices of first range in a consecutive(RLE) run of the same value
     ind.first <- c(1,cumsum(S4Vectors::runLength(S4Vectors::Rle(mcols(gr)[,id.field]))) + 1)
-    ind.first <- ind.first[-length(ind.first)]  ##erase last index from first range indices 
+    ind.first <- ind.first[-length(ind.first)]  ##erase last index from first range indices
     collapsed.gr <- GenomicRanges::GRanges(seqnames=seqnames(gr[ind.first]), ranges=IRanges(start=start(gr[ind.first]), end=end(gr[ind.last])), mcols=mcols(gr[ind.first]))
     names(mcols(collapsed.gr)) <- names(mcols(gr[ind.first]))
     return(collapsed.gr)
@@ -32,11 +32,11 @@ transCoord <- function(gr) {
 }
 
 #' Insert chromosome for in case it's missing
-#' 
+#'
 #' Add two columns with transformed genomic coordinates to the \code{\link{GRanges-class}} object. This is useful for making genomewide plots.
 #'
 #' @param gr A \code{\link{GRanges-class}} object.
-#' @return The input \code{\link{GRanges-class}} object with an additional metadata column containing chromosome name with 'chr'. 
+#' @return The input \code{\link{GRanges-class}} object with an additional metadata column containing chromosome name with 'chr'.
 insertchr <- function(gr) {
     mask <- which(!grepl('chr', seqnames(gr)))
     mcols(gr)$chromosome <- as.character(seqnames(gr))
@@ -46,12 +46,12 @@ insertchr <- function(gr) {
 }
 
 #' Process double SCE chromosomes: with internal WC region.
-#' 
+#'
 #' This function will take from a double SCE chromosome only WW or CC region (Longer region is taken).
 #'
 #' @param gr A \code{\link{GRanges-class}} object.
 #' @inheritParams synchronizeReadDir
-#' @return The input \code{\link{GRanges-class}} object with only WW or CC region retained. 
+#' @return The input \code{\link{GRanges-class}} object with only WW or CC region retained.
 removeDoubleSCEs <- function(gr, collapseWidth=5000000) {
     ## Helper function ##
     fillGaps <- function(gr, collapseWidth=5000000) {
@@ -61,8 +61,8 @@ removeDoubleSCEs <- function(gr, collapseWidth=5000000) {
         gr.new <- suppressWarnings( c(gr[,0], gaps.gr[width(gaps.gr) <= collapseWidth]) )
         gr.new <- GenomicRanges::reduce(gr.new)
         return(gr.new)
-    }    
-  
+    }
+
     gr <- GenomeInfoDb::keepSeqlevels(gr, value = unique(seqnames(gr)), pruning.mode = 'coarse')
     gr <- collapseBins(gr)
     if (any(gr$states == 'wc')) {
@@ -96,11 +96,11 @@ removeDoubleSCEs <- function(gr, collapseWidth=5000000) {
 
 
 #' Remove large spikes in short reads coverage
-#' 
+#'
 #' This function takes a \code{\link{GRanges-class}} object of aligned short reads
-#' and removes pockets of reads that are stacked on top of each other based on the 
+#' and removes pockets of reads that are stacked on top of each other based on the
 #' maximum number of reads allowed to pileup in 'max.pileup' parameter.
-#' 
+#'
 #' @param gr A \code{\link{GRanges-class}} object.
 #' @param max.pileup A maximum number of reads overlapping each other to be kept.
 #' @return A \code{\link{GRanges-class}} object.
@@ -112,7 +112,7 @@ removeDoubleSCEs <- function(gr, collapseWidth=5000000) {
 #'infile <- list.files(exampleFolder, full.names=TRUE)[1]
 #'## Read in the reads
 #'breakP.obj <- get(load(infile))
-#'frags <- breakP.obj$fragments 
+#'frags <- breakP.obj$fragments
 #'## Remove read spikes
 #'frags <- removeReadPileupSpikes(gr=frags)
 #'
