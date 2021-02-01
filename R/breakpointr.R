@@ -282,27 +282,71 @@ if (sce_summary){
         files2plot <- file.path(outputfolder,'data/')
         plotspath <- file.path(outputfolder,'plots/')
         plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
+   }
+}
+
+
+
+}
+
+#breakpointr(inputfolder=args[1],outputfolder = args[2], plotFull=args[3],plotFeature=args[4],feature=args[5],numLibsToShow = args[6],halfHalf=args[7], sce_summary=args[9],metricsfileDir=args[10],pairedEndReads = T,numCPU = args[8],windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
+#args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, FALSE ,"perc.coverage", 10 ,FALSE, 4, TRUE)
+
+inputfolder=args[1]
+outputfolder = args[2]
+plotFull=args[3]
+plotFeature=args[4]
+feature=args[5]
+numLibsToShow = args[6]
+halfHalf=args[7]
+sce_summary=args[9]
+metricsfileDir=args[10]
+pairedEndReads = T
+numCPU = args[8]
+
+if (sce_summary){
+    summaryBreaks.df <- read.table(file.path(breakspath, 'breakPointSummary.txt'),header=T)
+    qualityFilterLibraries(datapath,metricsfileDir,filteredDatapath)
+    frequencyFilterBreakpoints(summaryBreaks.df, blacklist="Input/Blacklist/centromeres2.txt",filteredDatapath,cleanDatapath,filterFrequency=0.15)
+    ## Plotting
+    if (plotFull){
+        cleanDatapath <- file.path(outputfolder,'clean')
+        files2plot <- list.files(cleanDatapath, pattern = ".RData", full.names = TRUE)
+        plotspath <- file.path(outputfolder,'plots')
+        plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
+    }
+    if (plotFeature){
+        files2plot <- file.path(outputfolder,'clean/')
+        plotspath <- file.path(outputfolder,'plots/')
+        plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
+    }
+    plottingSummary("Output/Plots/")
+} else {
+    ## Plotting
+    if (plotFull){
+        cleanDatapath <- file.path(outputfolder,'data')
+        files2plot <- list.files(cleanDatapath, pattern = ".RData", full.names = TRUE)
+        plotspath <- file.path(outputfolder,'plots')
+        plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
+    }
+    if (plotFeature){
+        files2plot <- file.path(outputfolder,'data/')
+        plotspath <- file.path(outputfolder,'plots/')
+        plottingReadCounts(files2plot=files2plot,feature=feature,numLibsToShow=numLibsToShow,printFile=paste0(plotspath,printFile),halfHalf=halfHalf)
     }
 }
 
-
-
-}
-
-breakpointr(inputfolder=args[1],outputfolder = args[2], plotFull=args[3],plotFeature=args[4],feature=args[5],numLibsToShow = args[6],halfHalf=args[7], sce_summary=args[9],metricsfileDir=args[10],pairedEndReads = T,numCPU = args[8],windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
-#args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, FALSE ,"perc.coverage", 10 ,FALSE, 4, TRUE)
-
-#inputfolder=args[1]
-#outputfolder = args[2]
-#plotFull=args[3]
-#plotFeature=args[4]
-#feature=args[5]
-#numLibsToShow = args[6]
-#halfHalf=args[7]
-#sce_summary=args[9]
-#metricsfileDir=args[10]
-#pairedEndReads = T
-#numCPU = args[8]
+inputfolder=args[1]
+outputfolder = args[2]
+plotFull=args[3]
+plotFeature=args[4]
+feature=args[5]
+numLibsToShow = args[6]
+halfHalf=args[7]
+sce_summary=args[9]
+metricsfileDir=args[10]
+pairedEndReads = T
+numCPU = args[8]
 #windowsize=175
 #binMethod="reads"
 #peakTh=0.3875
