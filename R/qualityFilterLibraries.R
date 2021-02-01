@@ -1,4 +1,4 @@
-install.packages("miceadds",repos = "http://cran.us.r-project.org")
+install.packages("miceadds",repos = "http://cran.us.r-project.org",dependencies = T)
 require(miceadds)
 
 qualityFilterLibraries <- function(datapath,metricsfileDir,filteredDatapath){
