@@ -7,7 +7,7 @@
 #args = commandArgs(trailingOnly=TRUE)
 library(tidyverse)
 
-plottingReadCounts <- function(files2plot="Input/RData_good/",feature="perc.coverage",numLibsToShow=10,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE){
+plottingReadCounts <- function(files2plot="BPR_output/clean/",feature="perc.coverage",numLibsToShow=10,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE){
 	if (is(files2plot, class.breakpoint)) {
 		numplots <- 1
 	} else if (is.character(files2plot)) {
@@ -30,6 +30,7 @@ plottingReadCounts <- function(files2plot="Input/RData_good/",feature="perc.cove
 		tmp <- data.frame(data$ID,data$lib.metrics[[feature]])
 		df <- rbind(tmp,df)
 	}
+
 	if (feature=="background.estimate"){
 		df <- df[order(df[,2] ),]
 	} else { df <- df[order(-df[,2] ),] }
@@ -106,6 +107,7 @@ plottingReadCounts <- function(files2plot="Input/RData_good/",feature="perc.cove
 			panel.grid.minor=element_blank(),
 			plot.background=element_blank()
 		)
+
 
 		### PLOT READS
 

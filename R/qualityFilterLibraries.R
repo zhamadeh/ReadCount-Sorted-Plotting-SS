@@ -110,7 +110,7 @@ frequencyFilterBreakpoints <- function(summaryBreaks.df, blacklist,filteredDatap
 	for (file in list.files(filteredDatapath,full.names = T)){
 		counter=counter+1
 		message("Working on ",basename(file), " ... ", (counter/length(list.files(filteredDatapath,full.names = T)))*100,"%")
-		tmp <- load.Rdata2(file)
+		tmp <- miceadds::load.Rdata2(file)
 
 		seqinfo <- tmp$breaks@seqinfo
 		seqnameLevels <- levels(tmp$breaks@seqnames)

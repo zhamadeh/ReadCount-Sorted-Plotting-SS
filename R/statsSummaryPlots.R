@@ -3,7 +3,7 @@ suppressWarnings(suppressMessages(library(plyr)))
 suppressWarnings(suppressMessages(library(tidyverse)))
 
 
-plottingSummary <- function(plotspath){
+plottingSummary <- function(plotspath,breakspath,metricsfileDir){
 	breakpointSummary <- read.table(file.path(breakspath, 'breakPointSummary.txt'),header=T) %>% select(-c(CI.start,CI.end,genoT))
 
 	for (i in seq(1:5)){
