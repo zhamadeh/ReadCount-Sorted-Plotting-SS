@@ -313,5 +313,3 @@ breakpointr(inputfolder=args[1],outputfolder = args[2], plotFull=args[3],plotFea
 #multi.sizes=NULL
 #genoT = "fisher"#
 
-
-
