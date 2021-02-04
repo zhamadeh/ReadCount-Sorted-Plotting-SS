@@ -255,7 +255,7 @@ if (callHotSpots) {
 if (sce_summary){
     summaryBreaks.df <- read.table(file.path(breakspath, 'breakPointSummary.txt'),header=T)
     qualityFilterLibraries(datapath,metricsfileDir,filteredDatapath)
-    frequencyFilterBreakpoints(summaryBreaks.df, blacklist="Input/Blacklist/centromeres2.txt",filteredDatapath,cleanDatapath,filterFrequency=2)
+    frequencyFilterBreakpoints(summaryBreaks.df, blacklist="Input/Blacklist/centromeres2.txt",filteredDatapath,cleanDatapath,filterFrequency=0.25)
     ## Plotting
     if (plotFull){
         cleanDatapath <- file.path(outputfolder,'clean')
