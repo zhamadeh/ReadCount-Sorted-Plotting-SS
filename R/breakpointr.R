@@ -1,17 +1,7 @@
-source("R/breakSeekr.R")
-source("R/confidenceInterval.R")
-source("R/deltaWCalculator.R")
-source("R/GenotypeBreaks.R")
-source("R/importReads.R")
-source("R/runBreakpointr.R")
-source("R/readCountOnlyPlotting.R")
-source("R/rwConfig.R")
-source("R/exportUCSC.R")
-source("R/utils.R")
-source("R/summarizeBreaks.R")
-source("R/plotting.R")
-source("R/qualityFilterLibraries.R")
-source("R/statsSummaryPlots.R")
+for (file in list.files("R",full.names = T)){
+    source(file)
+}
+
 args = commandArgs(trailingOnly=TRUE)
 list.of.packages <- c("foreach", "deSNOW","doParallel")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
@@ -273,8 +263,8 @@ if (sce_summary){
 } else {
     ## Plotting
     if (plotFull){
-        cleanDatapath <- file.path(outputfolder,'data')
-        files2plot <- list.files(cleanDatapath, pattern = ".RData", full.names = TRUE)
+        datapath <- file.path(outputfolder,'data')
+        files2plot <- list.files(datapath, pattern = ".RData", full.names = TRUE)
         plotspath <- file.path(outputfolder,'plots')
         plotBreakpoints(files2plot=files2plot, file=file.path(plotspath, 'breaksPlot.pdf')) -> beQuiet
     }
@@ -293,23 +283,5 @@ breakpointr(inputfolder=args[1],outputfolder = args[2], plotFull=args[3],plotFea
 #args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, FALSE ,"perc.coverage", 10 ,FALSE, 4, TRUE)
 
 
-#inputfolder=args[1]
-#outputfolder = args[2]
-#plotFull=args[3]
-#plotFeature=args[4]
-#feature=args[5]
-#numLibsToShow = args[6]
-#halfHalf=args[7]
-#sce_summary=args[9]
-#metricsfileDir=args[10]
-#pairedEndReads = T
-#numCPU = args[8]
-#windowsize=175
-#binMethod="reads"
-#peakTh=0.3875
-#min.mapq=7.75
-#trim=6.5
-#background=0.15
-#multi.sizes=NULL
-#genoT = "fisher"#
+
 

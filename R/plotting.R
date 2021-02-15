@@ -46,6 +46,7 @@ plotBreakpoints <- function(files2plot, file=NULL) {
         #counts overlaps between bins and our reads
         Watsonreads <- GenomicRanges::countOverlaps(binned.data, reads[strand(reads)=='-'])
         Crickreads <- GenomicRanges::countOverlaps(binned.data, reads[strand(reads)=='+'])
+
         bothreads <- Watsonreads + Crickreads
 
         mcols(binned.data)$bothreads <- bothreads
