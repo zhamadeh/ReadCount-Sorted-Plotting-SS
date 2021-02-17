@@ -13,7 +13,7 @@ suppressPackageStartupMessages(suppressMessages(suppressWarnings(require(doParal
 
 
 
-breakpointr <- function(inputfolder, outputfolder,plotFull=TRUE,metricsfileDir=NULL,plotFeature=TRUE,feature="perc.coverage",numLibsToShow=10,sce_summary=FALSE,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
+breakpointr <- function(inputfolder, outputfolder,createCompositeFile=F,plotFull=TRUE,metricsfileDir=NULL,plotFeature=TRUE,feature="perc.coverage",numLibsToShow=10,sce_summary=FALSE,printFile=paste0("readCounts_",feature,".pdf"),halfHalf=FALSE, configfile=NULL,pairedEndReads = F,windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15, numCPU=1, reuse.existing.files=FALSE, multi.sizes=NULL, pair2frgm=FALSE, chromosomes=NULL, filtAlt=FALSE, genoT='fisher', zlim=3.291,  minReads=10, maskRegions=NULL, callHotSpots=FALSE, conf=0.99) {
 
 runBreakpointrANDexport <- function(file, datapath, browserpath, config) {
     savename <- file.path(datapath, paste0(basename(file),'.RData'))
