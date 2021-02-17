@@ -15,4 +15,4 @@
 #10: metrics file dir for sce summary
 
 
-Rscript R/breakpointr.R "../Sequencing_data/ALL_GOOD_BAM_FILES/" "BPR_output" TRUE TRUE "perc.coverage" 10 FALSE 8 FALSE "Input/Metrics/" TRUE
+Rscript R/breakpointr.R "../Sequencing_data/ALL_GOOD_BAM_FILES/" "BPR_output" TRUE TRUE "perc.coverage" 10 FALSE 1 FALSE "Input/Metrics/" TRUE

@@ -280,7 +280,8 @@ if (sce_summary){
 }
 
 breakpointr(inputfolder=args[1],outputfolder = args[2], createCompositeFile = args[11],plotFull=args[3],plotFeature=args[4],feature=args[5],numLibsToShow = args[6],halfHalf=args[7], sce_summary=args[9],metricsfileDir=args[10],pairedEndReads = T,numCPU = args[8],windowsize=175,binMethod="reads",peakTh=0.3875,min.mapq=7.75,trim=6.5,background=0.15,multi.sizes=NULL,genoT = "fisher")
-#args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, FALSE ,"perc.coverage", 10 ,FALSE, 4, TRUE)
+args=c("Input/BAMFiles" ,"BPR_output" ,TRUE, TRUE ,"perc.coverage", 10 ,FALSE, 2, FALSE, "Input/Metrics/", TRUE)
+
 
 
 
